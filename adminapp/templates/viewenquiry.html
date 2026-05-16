@@ -1,0 +1,43 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block admin %}
+
+<div class="container-fluid">
+    <h3 class="text-center text-success">View Enquiries</h3>
+    <div class="table">
+        <table class="table">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Subject</th>
+                <th>Message</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for e in enqs %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ e.name }}</td>
+                    <td>{{ e.email }}</td>
+                    <td>{{ e.contact }}</td>
+                    <td>{{ e.subject }}</td>
+                    <td>{{ e.message }}</td>
+                    <td>
+                        <a href="{% url 'delenquiry' e.id %}" class="btn btn-outline-danger">Delete</a>
+                    </td>
+                    
+
+                </tr>
+                {% endfor %}
+            </tbody>
+
+
+        </table>
+    </div>
+    <!-- container div -->
+</div>
+{% endblock %}

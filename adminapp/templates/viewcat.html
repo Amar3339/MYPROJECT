@@ -1,0 +1,41 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block admin %}
+<div class="container-fluid">
+    <h3 class="text-center text-success">View Categories</h3>
+    
+    <div class="row">
+        <div class="col-sm-10 mx-auto">
+            <div class="table mx-auto">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>S.no</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in cats %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ c.name }}</td>
+                            <td>{{ c.description }}</td>
+                            <td>
+                                <a href="{% url 'delcat' c.id %}" class="btn btn-outline-danger me-2">Delete</a>
+                                <a href="{% url 'editcat' c.id %}" class="btn btn-outline-success">Edit</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">No categories found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

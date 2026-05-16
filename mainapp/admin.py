@@ -1,0 +1,8 @@
+from django.contrib import admin
+from mainapp.models import Enquiry, LoginInfo  ,UserInfo
+
+# Register your models here.
+admin.site.register(Enquiry)
+admin.site.register(LoginInfo)
+admin.site.register(UserInfo)
+

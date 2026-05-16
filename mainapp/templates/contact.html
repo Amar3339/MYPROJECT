@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="text-center text-success">Contact Us</h3>
+        <!-- enquiryform -->
+         <div class="row">
+            <div class="col-sm-12 mb-2">
+            <div class="col-sm-6 mx-auto my-auto">
+                <div class="card-shadow p-4">
+                    {% if messages %}
+                    {% for m in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{m}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="form-label" for="name">Name</label>
+                                <input type="text" class="form-control mb-2"name="name" id="name">
+                            </div>
+                        </div>
+                         <div class="row">
+                         <div class="col-sm-12">
+                            <label  class="form-label" for="email">Email</label>
+                            <input type="email" class="form-control mb-2" name="email" id="email"
+                         </div>
+                         </div>
+                         <div class="row">
+                            <div class="col-sm-12">
+                                <label class="form-label" for="contact">Contacct No.</label>
+                                <input type="number" class="form-control mb-2" name="contact" id="contact">
+                            </div>
+                         </div>
+                         <div class="row">
+                            <div class="col-sm-12">
+                                <label for="subject" class="form-label">Subject</label>
+                                 <input type="text" class="form-control mb-2" name="subject" id="subject">
+                            </div>
+                         </div>
+                         <div class="row">
+                            <div class="col-sm-12">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea name="message" id="message"  class="form-control mb-2"></textarea>
+
+                            </div>
+                         </div>
+                         <div class="text-center">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                         </div>
+                            
+
+
+                        
+                    </form>
+                </div>
+            </div>
+         </div>
+        <!-- enquiry form end -->
+    </div>
+</div>
+
+
+{% endblock %}

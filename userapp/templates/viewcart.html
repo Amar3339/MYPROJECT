@@ -1,0 +1,121 @@
+{% extends 'userbase.html' %}
+{% load static %}
+{% block user %}
+
+
+{% comment %} {% extends 'userbase.html' %}
+{% load static %}
+{% block user %}
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="text-center text-success">View Cart</h3>
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th>S.no:</th>
+                    <th>Book Name</th>
+                    <th>Cover Image:</th>
+                    <th>Book Category:</th>
+                    <th>Author:</th>
+                    <th>Quantity:</th>
+                    <th>price:</th>
+                    <th>Action:</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in items %}
+                <tr>
+                    <td>{{ forloop.coutner }}</td>
+                    <td>{{ i.bbok.name }}</td>
+                    <td>
+                        {% if i.book.cover_image %}
+                        <img src="{{ i.book.cover_image.url }}" alt="" style="max-width: 100px;">
+                        {% else %}
+                           No Image
+                           {% endif %}
+                    </td>
+                    <td>{{ i.book.category.name }}</td>
+                    <td>{{ i.book.author }}</td>
+                    <td>{{ i.book.quantity}}</td>
+                    <td>{{ i.book.price}}</td>
+                    <td>
+                        <a href="{% url 'removeitem' i.book.id %}" class="btn btn-danger">Remove</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="6" class="text-end"><h6>Total Price: {{ Total }}</h6></td>
+                    <td colspan="2">
+                        <a href="#" class="btn btn-success">Proceed To Payment</a>
+                    </td>
+              
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %} {% endcomment %}
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="text-center text-success">View Cart</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>S.no:</th>
+                    <th>Book Name</th>
+                    <th>Cover Image</th>
+                    <th>Category</th>
+                    <th>Author</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for i in items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.book.name }}</td>
+
+                    <td>
+                        {% if i.book.cover_image %}
+                            <img src="{{ i.book.cover_image.url }}" width="80">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+
+                    <td>{{ i.book.category.name }}</td>
+                    <td>{{ i.book.author }}</td>
+                    <td>{{ i.book.price }}</td>
+
+                    <td>
+                        <a href="{% url 'removeitem' i.book.id %}" class="btn btn-danger">
+                            Remove
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+                <tr>
+                    <td colspan="5" class="text-end">
+                        <b>Total Price :</b>
+                    </td>
+                    <td colspan="2">
+                        <b>{{ Total }}</b>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+
+{% block admin %}
+<div class="container">
+    <h3 class="text-center text-success">Edit Book</h3>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label>Title</label>
+            <input type="text" name="title" class="form-control" value="{{ book.title }}">
+        </div>
+        <div class="mb-3">
+            <label>Author</label>
+            <input type="text" name="author" class="form-control" value="{{ book.author }}">
+        </div>
+        <div class="mb-3">
+            <label>Category</label>
+            <select name="category" class="form-control">
+                {% for c in categories %}
+                    <option value="{{ c.id }}" {% if book.category.id == c.id %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Description</label>
+            <textarea name="description" class="form-control">{{ book.description }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label>Original Price</label>
+            <input type="number" step="0.01" name="original_price" class="form-control" value="{{ book.original_price }}">
+        </div>
+        <div class="mb-3">
+            <label>Price</label>
+            <input type="number" step="0.01" name="price" class="form-control" value="{{ book.price }}">
+        </div>
+        <div class="mb-3">
+            <label>Published Date</label>
+            <input type="date" name="published_date" class="form-control" value="{{ book.published_date }}">
+        </div>
+        <div class="mb-3">
+            <label>Language</label>
+            <input type="text" name="language" class="form-control" value="{{ book.language }}">
+        </div>
+        <div class="mb-3">
+            <label>Stock</label>
+            <input type="number" name="stock" class="form-control" value="{{ book.stock }}">
+        </div>
+        <div class="mb-3">
+            <label>Cover Image</label>
+            <input type="file" name="cover_image" class="form-control">
+            {% if book.cover_image %}
+                <img src="{{ book.cover_image.url }}" width="100">
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-success">Update Book</button>
+    </form>
+</div>
+{% endblock %}

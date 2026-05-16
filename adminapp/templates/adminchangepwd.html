@@ -1,0 +1,50 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block admin %}
+
+    <div class="row">
+        <div  class="col-sm-6 mx-auto my-auto">
+            <div class="card p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="oldpwd">Old password</label>
+                            <input type="password" name="oldpwd" id="oldpwd"class="form-control mb-2">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="newpwd"> new password</label>
+                            <input type="text" name="newpwd" id="newpwd" class="form-control mb-2">
+
+                        </div>
+                        
+
+                        </div>
+                         <div class="row">
+                        <div class="col-sm-12">
+                            <label for="cpwd"> confirm password</label>
+                            <input type="password" name="cpwd" id="cpwd" class="form-control mb-2">
+                           
+
+                        </div>
+                        
+
+                        </div> 
+                            
+                    <div>
+                     <button clas=" btn btn-outline-success d-flex justify-content center" >Change Pasword</button
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+
+
+        <!-- containerdin -->
+    </div>
+{% endblock %}

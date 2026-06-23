@@ -1,120 +1,194 @@
-from django.shortcuts import render ,redirect
-from .models import Enquiry, LoginInfo,UserInfo
+from django.shortcuts import render, redirect
 from django.contrib import messages
-from adminapp.models import *
-from userapp.models import UserInfo
-# Create your views here.
+
+from .models import Enquiry, LoginInfo, UserInfo
+from adminapp.models import Book
+
+
+# ---------------- HOME ----------------
 def index(request):
-    books=Book.objects.all()
-    return render(request,'index.html',{'books':books})
+    books = Book.objects.all().order_by('-created_at')
 
+    context = {
+        'books': books,
+        'new_arrivals': books[:8]
+    }
+    return render(request, 'index.html', context)
+
+
+# ---------------- ABOUT ----------------
 def about(request):
-    return render(request,'about.html')
+    return render(request, 'about.html')
 
+# search book sectiom
+def search_book(request):
+    query = request.GET.get('q')
+
+    books = Book.objects.none()
+
+    if query:
+        books = Book.objects.filter(title__icontains=query)
+
+    return render(request, 'search_results.html', {
+        'books': books,
+        'query': query
+    })
+    
+
+
+# ---------------- CONTACT ----------------
 def contact(request):
-    if request.method=='POST':
-        name=request.POST.get('name')
-        email=request.POST.get('email')
-        contact=request.POST.get('contact')
-        subject=request.POST.get('subject')
-        message=request.POST.get('message')
-        enq=Enquiry(name=name,email=email,contact=contact,subject=subject,message=message)
-        enq.save()
-        messages.success(request,'your enquiry is submitted ')
+    if request.method == 'POST':
+        Enquiry.objects.create(
+            name=request.POST.get('name'),
+            email=request.POST.get('email'),
+            contact=request.POST.get('contact'),
+            subject=request.POST.get('subject'),
+            message=request.POST.get('message')
+        )
+        messages.success(request, "Your enquiry has been submitted!")
         return redirect('contact')
+
     return render(request, 'contact.html')
 
 
-
-
-
-def adminlogin(request):
-    if request.method=='POST':
-        username=request.POST.get('username')
-        password=request.POST.get('password')
-        try:
-            ad=LoginInfo.objects.get(usertype='user', username=username, password=password)
-            if ad is not None:
-                request.session['adminid']=username 
-                
-                messages.success(request,'admin Login Successfully!')
-                return redirect('admindash')
-        except LoginInfo.DoesNotExist:
-            messages.error(request,'invalid username or password')
-            return redirect('adminlogin')
-    return render(request,'userdash.html')
-
-
-
-def register(request):
-    if request.method=='POST':
-        name=request.POST.get('name')
-        email=request.POST.get('email')
-        contact=request.POST.get('contact')
-        password=request.POST.get('password')
-        cpassword=request.POST.get('cpassword')
-        if password!=cpassword:
-            message.error(request,'password and confirm password ae not matchhing')
-            return redirect('register')
-        ch=LoginInfo.objects.filter(username=email)
-        if ch:
-            messages.error(request,'email is alreday registered')
-            return redirect('register')
-        log=LoginInfo(usertype='user',username=email,password=password)
-        user=UserInfo(name=name,email=email,contact=contact,login=  log)
-        log.save()
-        user.save()
-        messages.success(request,'user registered succcessfully')
-        return redirect('register')
-    
-    
-        
-        
-    return render(request,'register.html')
-
-# def login(request):
-
+# ---------------- ADMIN LOGIN (KEEP THIS) ----------------
+# def adminlogin(request):
 #     if request.method == "POST":
-
-#         email = request.POST['email']
-
-#         password = request.POST['password']
+#         username = request.POST.get("username")
+#         password = request.POST.get("password")
 
 #         try:
+#             admin = LoginInfo.objects.get(
+#                 username=username,
+#                 password=password,
+#                 usertype="admin"
+#             )
 
-#             user = LoginInfo.objects.get(username=email, password=password)
+#             request.session["adminid"] = admin.username
+#             return redirect("admindash")
 
-#             request.session['user_email'] = user.username
-
-#             return redirect('/')
 #         except LoginInfo.DoesNotExist:
+#             messages.error(request, "Invalid admin credentials")
+#             return redirect("adminlogin")
 
-#             return render(request, 'login.html', {'msg':'Invalid Email or Password'})
+#     return render(request, "adminlogin.html")
 
-#     return render(request, 'login.html')
+
+# ---------------- USER REGISTER ----------------
+def register(request):
+    if request.method == 'POST':
+
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        contact = request.POST.get('contact')
+        password = request.POST.get('password')
+        cpassword = request.POST.get('cpassword')
+
+        if password != cpassword:
+            messages.error(request, "Password mismatch")
+            return redirect('register')
+
+        if LoginInfo.objects.filter(username=email).exists():
+            messages.error(request, "Email already registered")
+            return redirect('register')
+
+        login_obj = LoginInfo.objects.create(
+            usertype='user',
+            username=email,
+            password=password
+        )
+
+        UserInfo.objects.create(
+            name=name,
+            email=email,
+            contact=contact,
+            password=password,
+            login=login_obj
+        )
+
+        messages.success(request, "Registration successful")
+        return redirect('login')
+
+    return render(request, 'register.html')
+
+
+# ---------------- COMMON LOGIN ----------------
+# def login(request):
+#     if request.method == "POST":
+
+#         email = request.POST.get("email")
+#         password = request.POST.get("password")
+#         usertype = request.POST.get("usertype")
+
+#         # -------- ADMIN LOGIN --------
+#         if usertype == "admin":
+#             try:
+#                 admin = LoginInfo.objects.get(
+#                     username=email,
+#                     password=password,
+#                     usertype="admin"
+#                 )
+
+#                 request.session["adminid"] = admin.username
+#                 return redirect("admindash")
+
+#             except LoginInfo.DoesNotExist:
+#                 messages.error(request, "Invalid admin credentials")
+#                 return redirect("login")
+
+#         # -------- USER LOGIN --------
+#         try:
+#             user = UserInfo.objects.get(email=email, password=password)
+
+#             request.session["user_email"] = user.email
+#             request.session["user_name"] = user.name
+
+#             return redirect("/")
+
+#         except UserInfo.DoesNotExist:
+#             messages.error(request, "Invalid user credentials")
+#             return redirect("login")
+
+#     return render(request, "login.html")
+
 def login(request):
     if request.method == "POST":
+
         email = request.POST.get("email")
         password = request.POST.get("password")
+        usertype = request.POST.get("usertype")
 
-        try:
-            user = UserInfo.objects.get(email=email, password=password)
+        user = LoginInfo.objects.filter(
+            username=email,
+            password=password,
+            usertype=usertype
+        ).first()
 
-            # session create
-            request.session["userid"] = user.id
-            request.session["username"] = user.name
+        if user:
+            if user.usertype == "admin":
+                request.session["adminid"] = user.username
+                return redirect("admindash")
+            else:
+                try:
+                    userinfo = UserInfo.objects.get(email=user.username)
+                except UserInfo.DoesNotExist:
+                    messages.error(request, "User profile not found")
+                    return redirect("login")
 
-            messages.success(request, "Login Successful")
-            return redirect("/")
+                request.session["user_email"] = userinfo.email
+                request.session["user_name"] = userinfo.name
+                return redirect("/")
 
-        except UserInfo.DoesNotExist:
-            messages.error(request, "Invalid Email or Password")
+        messages.error(request, "Invalid credentials")
+        return redirect("login")
 
     return render(request, "login.html")
-
-def book_details(request,id):
-    book=Book.objects.get(id=id)
-    return render(request,'book_details.html',{'book':book})
-
-
-# Create your views here.
+# ---------------- BOOK DETAILS ----------------
+def book_details(request, id):
+    try:
+        book = Book.objects.get(id=id)
+        return render(request, "book_details.html", {"book": book})
+    except Book.DoesNotExist:
+        messages.error(request, "Book not found")
+        return redirect("index")

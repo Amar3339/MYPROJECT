@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container my-5">
+
+    <h3>
+        Search Results for "{{ query }}"
+    </h3>
+
+    <div class="row">
+
+        {% for b in books %}
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card">
+
+                <img src="{{ b.cover_image.url }}"
+                     style="height:250px;object-fit:contain;">
+
+                <div class="card-body text-center">
+
+                    <h5>{{ b.title }}</h5>
+
+                    <p>{{ b.author }}</p>
+
+                    <a href="{% url 'book_details' b.id %}"
+                       class="btn btn-success">
+                        View Book
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <h4>No book found</h4>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

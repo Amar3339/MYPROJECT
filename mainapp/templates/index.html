@@ -1,115 +1,165 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block body %}
-<!--hero section-->
+
+<!-- HERO -->
 <div class="row">
-    <div class="col-sm-12" style="background-image: url('{% static " images/image.png" %}'); height:50vh;
-        background-size:cover; background-position:center">
-        <div class="row">
-            <div class="col-sm-9 mx-auto">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="container-flude d-flex justify-content-center align-items-center">
-                            <div class=" text-start mt-5">
-                                <h1 class="mb-4 display-4 fw-semibold">Up to 75% off</h1>
-                                <p>There is a good news for all of you,if you have any book from our website then you
-                                </p>
-                                <button class="btn btn-success">Shop Now</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-center">
-                            <img src="{% static 'images/hero.png' %}" class="img-fluid" alt="">
-                        </div>
-                    </div>
-                </div>
+    <div class="col-sm-12"
+         style="background-image:url('{% static "images/image.png" %}');
+         height:50vh; background-size:cover; background-position:center">
+
+        <div class="row h-100 align-items-center">
+            <div class="col-sm-6 p-5">
+                <h1 class="fw-bold">Up to 75% Off</h1>
+                <p>Best books at lowest price</p>
+                <button class="btn btn-success">Shop Now</button>
+            </div>
+
+            <div class="col-sm-6 text-center">
+                <img src="{% static 'images/hero.png' %}" class="img-fluid">
             </div>
         </div>
 
     </div>
 </div>
-<!--hero section end-->
-<!-- featured book -->
-<div class="row">
-    <div class="col-sm-11 mx-auto my-5">
-        <h3 class="text-success text-center">FEATURED BOOKS</h3>
-        <section class="splide" aria-label="Splide Basic HTML Example">
-            <div class="splide__track">
-                <ul class="splide__list">
-                    {% for b in books %}
-                    <li class="splide__slide p-3">
-                        <div class="card">
-                            <img src="{{b.cover_image.url}}" class="object-fit-contain" style="height:200px;" alt="...">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">{{b.title}}</h5>
-                                <!-- <p class="card-text">{{b.description}}</p> -->
-                                <span><del>₹{{b.original_price}}</del><strong>₹ {{b.price}}</strong></span><br>
-                                <a href="{% url 'book_details' b.id %}" class="btn btn-outline-success">View Book</a> 
-                            </div>
+
+<!-- FEATURED BOOKS -->
+<div class="container my-5">
+    <h3 class="text-center text-success">FEATURED BOOKS</h3>
+
+    <section class="splide">
+        <div class="splide__track">
+            <ul class="splide__list">
+
+                {% for b in books %}
+                <li class="splide__slide">
+                    <div class="card h-100">
+
+                        {% if b.cover_image %}
+                        <img src="{{ b.cover_image.url }}"
+                             style="height:200px; object-fit:contain;">
+                        {% endif %}
+
+                        <div class="card-body text-center">
+                            <h5>{{ b.title }}</h5>
+
+                            <p class="small text-muted">
+                                {{ b.description|truncatechars:80 }}
+                            </p>
+
+                            <span>
+                                <del>₹{{ b.original_price }}</del>
+                                <strong>₹{{ b.price }}</strong>
+                            </span>
+
+                            <br>
+
+                            <a href="{% url 'book_details' b.id %}"
+                               class="btn btn-outline-success mt-2">
+                                View Book
+                            </a>
                         </div>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </section>
-    </div>
-</div>
-<!-- featured book end -->
-<!--process segment-->
-<div class="row">
-    <div class="col-sm-10 mx-auto">
-        <div class="row">
-            <div class="col-sm-3">
-                <div class="d-inline-block text-center p-4">
 
-                    <i class="fa-solid fa-truck-fast fa-3x text-success"></i>
-                    <h5 class="">Free Delivery</h5>
-                    <p class="fw-semibold">Over rs. 1000</p>
+                    </div>
+                </li>
+                {% endfor %}
 
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="d-inline-block text-center py-4">
-
-                    <i class="fa-solid fa-truck-fast fa-3x text-success"></i>
-                    <h5 class="">Secure Payment</h5>
-                    <p class="fw-semibold">100% secure payment</p>
-
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="d-inline-block text-center p-4">
-
-                    <i class="fa-solid fa-rotate-right fa-3x text-success"></i>
-                    <h5 class="">Easy Returns</h5>
-                    <p class="fw-semibold">3 Days Easy Returns</p>
-
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="d-inline-block text-center p-4">
-
-                    <i class="fa-solid fa-headset fa-3x text-success"></i>
-                    <h5 class="">24x7 Support</h5>
-                    <p class="fw-semibold">100% Customer support</p>
-
-                </div>
-            </div>
+            </ul>
         </div>
+    </section>
+</div>
+
+<!-- NEW ARRIVALS -->
+<div class="container my-5">
+
+    <h3 class="text-center text-success">NEW ARRIVALS</h3>
+    <p class="text-center text-muted">
+        Total: {{ new_arrivals|length }}
+    </p>
+
+    <section class="splide new-splide">
+        <div class="splide__track">
+            <ul class="splide__list">
+
+                {% for b in new_arrivals %}
+                <li class="splide__slide">
+                    <div class="card h-100">
+
+                        {% if b.cover_image %}
+                        <img src="{{ b.cover_image.url }}"
+                             style="height:200px; object-fit:contain;">
+                        {% endif %}
+
+                        <div class="card-body text-center">
+                            <h5>{{ b.title }}</h5>
+
+                            <span>
+                                <del>₹{{ b.original_price }}</del>
+                                <strong>₹{{ b.price }}</strong>
+                            </span>
+
+                            <br>
+
+                            <a href="{% url 'book_details' b.id %}"
+                               class="btn btn-outline-success mt-2">
+                                View Book
+                            </a>
+                        </div>
+
+                    </div>
+                </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+    </section>
+</div>
+
+<!-- PROCESS -->
+<div class="container my-5 text-center">
+    <div class="row">
+
+        <div class="col-sm-3">
+            <i class="fa-solid fa-truck-fast fa-3x text-success"></i>
+            <h5>Free Delivery</h5>
+        </div>
+
+        <div class="col-sm-3">
+            <i class="fa-solid fa-lock fa-3x text-success"></i>
+            <h5>Secure Payment</h5>
+        </div>
+
+        <div class="col-sm-3">
+            <i class="fa-solid fa-rotate-right fa-3x text-success"></i>
+            <h5>Easy Returns</h5>
+        </div>
+
+        <div class="col-sm-3">
+            <i class="fa-solid fa-headset fa-3x text-success"></i>
+            <h5>Support</h5>
+        </div>
+
     </div>
 </div>
-<!--process segment end-->
 
-
-
-
-<!-- subscription segment  -->
+<!-- SUBSCRIPTION / DEAL OF THE DAY -->
 <div class="row">
-    <div class="col-sm-12" style="background-image: url('{% static " images/hero2.png" %}'); height:50vh;
-        background-size:cover; background-position:center; background-attachment:fixed;"></div>
-</div>
+    <div class="col-sm-12 d-flex align-items-center"
+         style="background-image:url('{% static "images/hero2.png" %}');
+         height:50vh; background-size:cover; background-position:center;
+         position:relative;">
 
-<!-- subscription segmrnt end -->
+        <!-- dark overlay so white text stays readable over any photo -->
+        <div style="position:absolute; inset:0; background:rgba(0,0,0,0.45);"></div>
+
+        <div class="container text-center text-white" style="position:relative; z-index:1;">
+            <h2 class="fw-bold">Deal of the Day</h2>
+            <h1 class="fw-bold">Up to 50% Off</h1>
+            <p>Order this weekend and get free delivery too.</p>
+            <button class="btn btn-success">Shop Now</button>
+        </div>
+
+    </div>
+</div>
 
 {% endblock %}

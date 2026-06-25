@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
 from .models import Enquiry, LoginInfo, UserInfo
-from adminapp.models import Book
+from adminapp.models import Book ,Category
 
 
-# ---------------- HOME ----------------
+
 def index(request):
     books = Book.objects.all().order_by('-created_at')
 
@@ -16,11 +16,10 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-# ---------------- ABOUT ----------------
 def about(request):
     return render(request, 'about.html')
 
-# search book sectiom
+# search book section
 def search_book(request):
     query = request.GET.get('q')
 
@@ -35,8 +34,6 @@ def search_book(request):
     })
     
 
-
-# ---------------- CONTACT ----------------
 def contact(request):
     if request.method == 'POST':
         Enquiry.objects.create(
@@ -52,30 +49,6 @@ def contact(request):
     return render(request, 'contact.html')
 
 
-# ---------------- ADMIN LOGIN (KEEP THIS) ----------------
-# def adminlogin(request):
-#     if request.method == "POST":
-#         username = request.POST.get("username")
-#         password = request.POST.get("password")
-
-#         try:
-#             admin = LoginInfo.objects.get(
-#                 username=username,
-#                 password=password,
-#                 usertype="admin"
-#             )
-
-#             request.session["adminid"] = admin.username
-#             return redirect("admindash")
-
-#         except LoginInfo.DoesNotExist:
-#             messages.error(request, "Invalid admin credentials")
-#             return redirect("adminlogin")
-
-#     return render(request, "adminlogin.html")
-
-
-# ---------------- USER REGISTER ----------------
 def register(request):
     if request.method == 'POST':
 
@@ -112,46 +85,6 @@ def register(request):
 
     return render(request, 'register.html')
 
-
-# ---------------- COMMON LOGIN ----------------
-# def login(request):
-#     if request.method == "POST":
-
-#         email = request.POST.get("email")
-#         password = request.POST.get("password")
-#         usertype = request.POST.get("usertype")
-
-#         # -------- ADMIN LOGIN --------
-#         if usertype == "admin":
-#             try:
-#                 admin = LoginInfo.objects.get(
-#                     username=email,
-#                     password=password,
-#                     usertype="admin"
-#                 )
-
-#                 request.session["adminid"] = admin.username
-#                 return redirect("admindash")
-
-#             except LoginInfo.DoesNotExist:
-#                 messages.error(request, "Invalid admin credentials")
-#                 return redirect("login")
-
-#         # -------- USER LOGIN --------
-#         try:
-#             user = UserInfo.objects.get(email=email, password=password)
-
-#             request.session["user_email"] = user.email
-#             request.session["user_name"] = user.name
-
-#             return redirect("/")
-
-#         except UserInfo.DoesNotExist:
-#             messages.error(request, "Invalid user credentials")
-#             return redirect("login")
-
-#     return render(request, "login.html")
-
 def login(request):
     if request.method == "POST":
 
@@ -184,7 +117,7 @@ def login(request):
         return redirect("login")
 
     return render(request, "login.html")
-# ---------------- BOOK DETAILS ----------------
+
 def book_details(request, id):
     try:
         book = Book.objects.get(id=id)
@@ -192,3 +125,27 @@ def book_details(request, id):
     except Book.DoesNotExist:
         messages.error(request, "Book not found")
         return redirect("index")
+    
+def category_list(request):
+
+    categories = Category.objects.all()
+
+    return render(request, 'category_list.html', {
+
+        'categories': categories
+
+    })
+
+def category_books(request, category_id):
+
+    category = get_object_or_404(Category, id=category_id)
+
+    books = Book.objects.filter(category=category)
+
+    return render(request, 'category_books.html', {
+
+        'category': category,
+
+        'books': books
+
+    })

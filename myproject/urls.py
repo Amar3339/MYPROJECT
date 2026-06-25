@@ -26,11 +26,13 @@ urlpatterns = [
     path('',views.index,name='index'),
     path('about/',views.about,name='about'),
     path('contact/',views.contact,name='contact'),
-    path('adminlogin/',views.adminlogin,name='adminlogin'),
+    # path('adminlogin/',views.adminlogin,name='adminlogin'),
     path('register/',views.register,name='register'),
     path('login/',views.login,name='login'),
     path('adminapp/',include('adminapp.adminurls')),
     path('userapp/',include('userapp.userurls')),
     path('book_details/<int:id>/',views.book_details, name='book_details'),
+    path('search/', views.search_book, name='search_book'),
+    path('', include('mainapp.urls')),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

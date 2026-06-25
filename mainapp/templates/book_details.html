@@ -1,43 +1,54 @@
 {% extends "base.html" %}
 {% load static %}
 {% block body %}
-<div class="row">
-    <div class="col-sm-10 shadow mx-auto my-5">
-        <div class="row py-5 p-4">
 
-            <!-- LEFT SIDE IMAGE -->
-            <div class="col-sm-4">
-                {% if book.cover_image %}
-                    <img src="{{ book.cover_image.url }}" height="400px" class="card">
-                {% else %}
-                    <img src="https://via.placeholder.com/300x400?text=No+Image" class="card">
-                {% endif %}
-            </div>
+<div class="container my-5">
+    <div class="row shadow p-4 bg-white rounded">
 
-            <!-- RIGHT SIDE DETAILS -->
-            <div class="col-sm-8">
-                <h3 class="text-success">Title: {{ book.title }}</h3>
-                <h6 class="text-success">Author Name: {{ book.author }}</h6>
-
-                <p><b>Description:</b> {{ book.description }}</p>
-
-                <span><b>Language:</b> {{ book.language }}</span><br>
-                <span>Published date: {{ book.publish_date }}</span><br>
-
-                <h4 class="text-success mt-2">Get It Now</h4>
-                <span>
-                    <del>₹{{ book.original_price }}</del>
-                    <strong class="text-danger">₹ {{ book.price }}</strong>
-                </span>
-
-                <div class="mt-3">
-                    <a href="{% url 'addtocart' book.id %}" class="btn btn-success">
-                        Add To Cart
-                    </a>
-                </div>
-            </div>
-
+        <!-- IMAGE SECTION -->
+        <div class="col-md-4 d-flex justify-content-center align-items-start">
+            {% if book.cover_image %}
+                <img src="{{ book.cover_image.url }}"
+                     class="img-fluid rounded shadow"
+                     style="max-height: 400px; object-fit: contain;">
+            {% else %}
+                <img src="https://via.placeholder.com/300x400?text=No+Image"
+                     class="img-fluid rounded shadow"
+                     style="max-height: 400px; object-fit: contain;">
+            {% endif %}
         </div>
+
+        <!-- DETAILS SECTION -->
+        <div class="col-md-8">
+            <h3 class="text-success">{{ book.title }}</h3>
+
+            <h6 class="text-muted">Author: {{ book.author }}</h6>
+
+            <hr>
+
+            <p>
+                <b>Description:</b><br>
+                {{ book.description }}
+            </p>
+
+            <p>
+                <b>Language:</b> {{ book.language }} <br>
+                <b>Published:</b> {{ book.publish_date }}
+            </p>
+
+            <h4 class="text-success mt-3">Price</h4>
+
+            <p>
+                <del>₹{{ book.original_price }}</del>
+                <strong class="text-danger fs-4">₹{{ book.price }}</strong>
+            </p>
+
+            <a href="{% url 'addtocart' book.id %}" class="btn btn-success px-4">
+                Add To Cart
+            </a>
+        </div>
+
     </div>
 </div>
+
 {% endblock %}

@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from adminapp.models import Category, Book
 from mainapp.models import Enquiry, LoginInfo
+from django.contrib.auth.models import User
 
 
-# ---------------- Dashboard ----------------
 def admindash(request):
     if 'adminid' not in request.session:
         messages.error(request, "Please login first!")
@@ -13,18 +13,14 @@ def admindash(request):
     return render(request, 'admindash.html')
 
 
-# ---------------- Logout ----------------
+
 def adminlogout(request):
-    if 'adminid' in request.session:
-        del request.session['adminid']
-        messages.success(request, "Logged out successfully!")
-    else:
-        messages.error(request, "You are not logged in!")
-
-    return redirect('adminlogin')
+    request.session.flush()   
+    messages.success(request, "Logged out successfully!")
+    return redirect('login')  
 
 
-# ---------------- View Enquiry ----------------
+
 def viewenquiry(request):
     if 'adminid' not in request.session:
         return redirect('adminlogin')
@@ -33,7 +29,7 @@ def viewenquiry(request):
     return render(request, 'viewenquiry.html', {'enqs': enquiries})
 
 
-# ---------------- Delete Enquiry ----------------
+
 def delenquiry(request, id):
     if 'adminid' not in request.session:
         return redirect('adminlogin')
@@ -48,7 +44,7 @@ def delenquiry(request, id):
     return redirect('viewenquiry')
 
 
-# ---------------- Change Password ----------------
+
 def adminchangepwd(request):
     if 'adminid' not in request.session:
         return redirect('adminlogin')
@@ -79,7 +75,7 @@ def adminchangepwd(request):
     return render(request, 'adminchangepwd.html')
 
 
-# ---------------- Add Category ----------------
+
 def addcat(request):
     if 'adminid' not in request.session:
         return redirect('adminlogin')
@@ -97,7 +93,7 @@ def addcat(request):
     return render(request, 'addcat.html')
 
 
-# ---------------- View Category ----------------
+
 def viewcat(request):
     if 'adminid' not in request.session:
         return redirect('adminlogin')
@@ -106,7 +102,7 @@ def viewcat(request):
     return render(request, 'viewcat.html', {'cats': categories})
 
 
-# ---------------- Add Book ----------------
+
 def addbook(request):
     if 'adminid' not in request.session:
         return redirect('adminlogin')
@@ -116,7 +112,8 @@ def addbook(request):
     if request.method == "POST":
         title = request.POST.get('title')
         author = request.POST.get('author')
-        category_id = request.POST.get('category')
+        category_id = request.POST.get('cat')
+
         description = request.POST.get('description')
         original_price = request.POST.get('original_price')
         price = request.POST.get('price')
@@ -128,7 +125,7 @@ def addbook(request):
         try:
             category = Category.objects.get(id=category_id)
 
-            book = Book(
+            Book.objects.create(
                 title=title,
                 author=author,
                 category=category,
@@ -140,18 +137,15 @@ def addbook(request):
                 stock=stock,
                 cover_image=cover_image
             )
-            book.save()
 
             messages.success(request, "Book added successfully!")
-            return redirect('addbook')
+            return redirect('viewbook')  
 
         except Category.DoesNotExist:
             messages.error(request, "Invalid category selected!")
 
     return render(request, 'addbook.html', {'categories': categories})
 
-
-# ---------------- View Book ----------------
 def viewbook(request):
     if 'adminid' not in request.session:
         return redirect('adminlogin')
@@ -159,8 +153,6 @@ def viewbook(request):
     books = Book.objects.all()
     return render(request, 'viewbook.html', {'books': books})
 
-
-# _________________deletecateogry____________
 def delcat(request, id):
     if 'adminid' not in request.session:
         return redirect('adminlogin')
@@ -171,7 +163,7 @@ def delcat(request, id):
     return redirect('viewcat')
 
 
-# ____________editcateogy________________
+
 def editcat(request, id):
     if 'adminid' not in request.session:
         return redirect('adminlogin')
@@ -187,7 +179,7 @@ def editcat(request, id):
 
     return render(request, 'editcat.html', {'cat': category})
 
-# Delete Book
+
 def delbook(request, id):
     if 'adminid' not in request.session:
         return redirect('adminlogin')
@@ -198,7 +190,7 @@ def delbook(request, id):
     return redirect('viewbook')
 
 
-# Edit Book
+
 def editbook(request, id):
     if 'adminid' not in request.session:
         return redirect('adminlogin')

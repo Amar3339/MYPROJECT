@@ -4,10 +4,13 @@
 <div class="container">
     <div class="row justify-content-center mt-5">
         <div class="col-md-5">
+
             <div class="card shadow-lg rounded">
                 <div class="card-body p-5">
-                    <h2 class="text-center text-primary mb-4">User Login</h2>
 
+                    <h2 class="text-center text-primary mb-4">Login</h2>
+
+                    <!-- messages -->
                     {% if messages %}
                         {% for message in messages %}
                             <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -20,32 +23,46 @@
                     <form method="post">
                         {% csrf_token %}
 
-                       
+                        <!-- LOGIN TYPE -->
+                        <div class="mb-3">
+                            <label class="form-label">Login Type</label>
+                            <select name="usertype" class="form-control" required>
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+
+                        <!-- EMAIL -->
                         <div class="mb-3">
                             <label class="form-label">Email</label>
                             <input type="email" class="form-control" name="email"
                                    placeholder="Enter your email" required>
                         </div>
 
-                       
+                        <!-- PASSWORD -->
                         <div class="mb-3">
                             <label class="form-label">Password</label>
                             <input type="password" class="form-control" name="password"
                                    placeholder="Enter your password" required>
                         </div>
 
+                        <!-- BUTTON -->
                         <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                Login
+                            </button>
                         </div>
 
-                        
+                        <!-- REGISTER LINK -->
                         <p class="text-center mt-3">
                             New user? <a href="/register/">Create Account</a>
                         </p>
 
                     </form>
+
                 </div>
             </div>
+
         </div>
     </div>
 </div>
